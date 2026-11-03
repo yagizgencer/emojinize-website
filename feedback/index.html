@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Feedback · Emojinize</title>
+  <meta name="description" content="Tell us how Emojinize is working for you. We read every message.">
+  <link rel="canonical" href="https://emojinize.com/feedback/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Emojinize">
+  <meta property="og:title" content="Feedback · Emojinize">
+  <meta property="og:description" content="Tell us how Emojinize is working for you. We read every message.">
+  <meta property="og:url" content="https://emojinize.com/feedback/">
+  <meta property="og:image" content="https://emojinize.com/assets/icons/store128.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#19191b" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/icon16.png">
+  <link rel="apple-touch-icon" href="/assets/icons/store128.png">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script>document.documentElement.classList.add("js");</script>
+  <script src="/assets/config.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+  <script src="/assets/feedback.js" defer></script>
+</head>
+<body>
+  <header class="snav" data-emojinize="ui">
+    <a class="slogo" href="/"><img src="/assets/icons/mark40.png" srcset="/assets/icons/mark60.png 2x, /assets/icons/mark90.png 3x" width="29" height="24" alt="">Emojinize</a>
+    <nav class="links" aria-label="Site">
+      <a href="/">Home</a>
+      <a href="/write/">Write</a>
+      <a href="/tour/">Tour</a>
+      <a href="/feedback/" aria-current="page">Feedback</a>
+      <a href="/privacy/">Privacy</a>
+    </nav>
+    <a class="storelink" href="https://chromewebstore.google.com/detail/cbofieekacidabdkojipfaokcahhbplm" data-store="nav">Chrome Store<svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3H3.5A1.5 1.5 0 0 0 2 4.5v6A1.5 1.5 0 0 0 3.5 12h6a1.5 1.5 0 0 0 1.5-1.5V9"/><path d="M8.5 2H12v3.5M12 2L6.5 7.5"/></svg></a>
+  </header>
+
+  <main class="pg pg-feedback" data-emojinize="ui">
+    <div class="whead">
+      <div class="deco" aria-hidden="true"><span>💌</span><span>🗣️</span><span>✨</span></div>
+      <h1 class="disp sm" id="fb-title">Tell us how it's going</h1>
+      <p class="lede" id="fb-lede">We read every message. They decide what we fix and build next.</p>
+    </div>
+
+    <form class="scard fcard" id="fb" novalidate>
+      <fieldset>
+        <legend class="label">What is it about?</legend>
+        <div class="ftiles">
+          <label class="tile"><input type="radio" name="topic" value="broken"><span class="e" aria-hidden="true">🐞</span>Something is broken</label>
+          <label class="tile"><input type="radio" name="topic" value="quality"><span class="e" aria-hidden="true">🎯</span>An emoji didn't fit</label>
+          <label class="tile"><input type="radio" name="topic" value="idea"><span class="e" aria-hidden="true">💡</span>An idea</label>
+          <label class="tile"><input type="radio" name="topic" value="experience"><span class="e" aria-hidden="true">💬</span>How it feels to use</label>
+          <label class="tile"><input type="radio" name="topic" value="other"><span class="e" aria-hidden="true">✏️</span>Something else</label>
+        </div>
+      </fieldset>
+      <div class="fld">
+        <label class="label" for="msg">Your message</label>
+        <textarea class="field" id="msg" name="message" rows="5" maxlength="5000" placeholder="Tell us more."></textarea>
+      </div>
+      <div class="fld">
+        <label class="label" for="website">Website <span class="optnote">optional, if it is about one</span></label>
+        <input class="field" id="website" name="website" type="text" maxlength="200" autocomplete="off" placeholder="e.g. a news site, Gmail, Reddit">
+      </div>
+      <!-- People never see or reach this; a bot that fills it in is told
+           its message went through, and nothing is kept. -->
+      <div class="trap" aria-hidden="true">
+        <label for="company">Company</label>
+        <input id="company" name="company" type="text" tabindex="-1" autocomplete="off">
+      </div>
+      <div id="turnstile"></div>
+      <div class="wrow">
+        <span class="also" id="also">Also sent: opened from the website</span>
+        <button class="sbtn primary" id="send" type="submit">Send feedback</button>
+      </div>
+      <p class="note" id="fb-status" role="status" aria-live="polite"></p>
+    </form>
+
+    <section class="scard thanks" id="thanks" hidden aria-labelledby="thanks-h">
+      <div class="deco" aria-hidden="true"><span>🫶</span><span>💌</span><span>✨</span></div>
+      <h2 class="disp sm" id="thanks-h" tabindex="-1">Thank you</h2>
+      <p class="lede">Your message reached us. We read every one.</p>
+      <a class="sbtn" href="/">Back to Home</a>
+    </section>
+
+    <!-- Until the feedback Worker is live (config.js FEEDBACK_ENDPOINT). -->
+    <section class="scard thanks" id="fb-tally" hidden aria-labelledby="tally-h">
+      <h2 class="label" id="tally-h">Our feedback form</h2>
+      <p class="lede">Our own form opens here soon. Until then, the form we have used so far takes your message, with the same topics.</p>
+      <a class="sbtn primary" id="fb-tally-link" href="https://tally.so/r/44gJXB?source=site&amp;env=prod">Open the feedback form</a>
+    </section>
+
+    <p class="note after" id="fb-after">Your message is kept by Emojinize, apart from usage statistics. Nothing from the pages you read is attached.</p>
+  </main>
+</body>
+</html>

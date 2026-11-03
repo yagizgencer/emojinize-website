@@ -1,4 +1,82 @@
 <!doctype html>
-<title>Emojinize</title>
-<h1>Emojinize</h1>
-<p>Coming soon.</p>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Emojinize: emojis for the words you read</title>
+  <meta name="description" content="Emojinize is a Chrome extension that adds emojis to the words and phrases you read on any website, each one picked for what it means in context.">
+  <link rel="canonical" href="https://emojinize.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Emojinize">
+  <meta property="og:title" content="Emojinize: emojis for the words you read">
+  <meta property="og:description" content="Words come to life on any website. Emojinize adds emojis that fit what each word means in context.">
+  <meta property="og:url" content="https://emojinize.com/">
+  <meta property="og:image" content="https://emojinize.com/assets/icons/store128.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#19191b" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/icon16.png">
+  <link rel="apple-touch-icon" href="/assets/icons/store128.png">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script>document.documentElement.classList.add("js");</script>
+  <script src="/assets/config.js" defer></script>
+  <script src="/assets/samples.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+</head>
+<body>
+  <header class="snav" data-emojinize="ui">
+    <a class="slogo" href="/"><img src="/assets/icons/mark40.png" srcset="/assets/icons/mark60.png 2x, /assets/icons/mark90.png 3x" width="29" height="24" alt="">Emojinize</a>
+    <nav class="links" aria-label="Site">
+      <a href="/" aria-current="page">Home</a>
+      <a href="/write/">Write</a>
+      <a href="/tour/">Tour</a>
+      <a href="/feedback/">Feedback</a>
+      <a href="/privacy/">Privacy</a>
+    </nav>
+    <a class="storelink" href="https://chromewebstore.google.com/detail/cbofieekacidabdkojipfaokcahhbplm" data-store="nav">Chrome Store<svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3H3.5A1.5 1.5 0 0 0 2 4.5v6A1.5 1.5 0 0 0 3.5 12h6a1.5 1.5 0 0 0 1.5-1.5V9"/><path d="M8.5 2H12v3.5M12 2L6.5 7.5"/></svg></a>
+  </header>
+
+  <main class="pg pg-home">
+    <section class="hero">
+      <div class="copy">
+        <div class="deco" aria-hidden="true"><span>👋</span><span>😊</span><span>✨</span></div>
+        <h1 class="disp">Words come to life on any website</h1>
+        <p class="lede">Emojinize adds emojis to the words and phrases you read, and makes sure each one fits its meaning in context. Many languages, one click.</p>
+
+        <div class="act" data-when="new">
+          <div class="cta">
+            <a class="sbtn primary lg" href="https://chromewebstore.google.com/detail/cbofieekacidabdkojipfaokcahhbplm" data-store="home"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg>Add to Chrome</a>
+            <a class="sbtn link" href="/write/">Try it on your own text →</a>
+          </div>
+          <p class="cap">For Chrome 131 and newer. No account needed.</p>
+        </div>
+
+        <div class="act" data-when="installed" hidden>
+          <div class="cta">
+            <span class="inst-big"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg>Emojinize is installed</span>
+            <a class="sbtn" href="/tour/">Take the tour</a>
+          </div>
+          <p class="cap">Open it from your toolbar, or press <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>E</kbd>.</p>
+        </div>
+      </div>
+
+      <div class="scard demo" data-sample data-emojinize="ui">
+        <div class="demo-head">
+          <span class="label" id="sample-label">Sample</span>
+          <div class="seg" role="radiogroup" aria-label="Emoji display" data-modes>
+            <button type="button" role="radio" aria-checked="true" data-mode-set="ontop">On top</button>
+            <button type="button" role="radio" aria-checked="false" data-mode-set="toggle">Toggle</button>
+          </div>
+        </div>
+        <div class="demo-body" role="group" aria-labelledby="sample-label">
+          <h2 class="an story-t" data-mode="ontop" data-render="title">A very Monday morning</h2>
+          <p class="an" data-mode="ontop" data-render="p1" data-start="2">My alarm went off at six, but I hit snooze and slept in. By the time I rolled out of bed, I was already running late.</p>
+          <p class="an" data-mode="ontop" data-render="p3" data-start="9">At the office, my boss was in a great mood and brought in donuts for everyone. Maybe Mondays are not so bad after all.</p>
+        </div>
+        <p class="cap">Recorded output of the Emojinize model for the welcome tour's sample text.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
