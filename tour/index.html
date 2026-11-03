@@ -27,7 +27,7 @@
 </head>
 <body>
   <header class="snav" data-emojinize="ui">
-    <a class="slogo" href="/"><img src="/assets/icons/mark40.png" srcset="/assets/icons/mark60.png 2x, /assets/icons/mark90.png 3x" width="29" height="24" alt="">Emojinize</a>
+    <a class="slogo" href="/"><img src="/assets/icons/mark40.png" srcset="/assets/icons/mark40.png 48w, /assets/icons/mark60.png 72w, /assets/icons/mark80.png 96w, /assets/icons/mark120.png 144w" sizes="(min-width: 1100px) 48px, 29px" width="29" height="24" alt="">Emojinize</a>
     <nav class="links" aria-label="Site">
       <a href="/">Home</a>
       <a href="/write/">Write</a>
@@ -39,7 +39,7 @@
   </header>
 
   <!-- With the extension installed, it sets <html data-emojinize-tour="host">
-       and runs the tour in #step, #rail, #dots, #back, #next and #skip.
+       and runs the tour in #step, #rail, #dots, #back and #next.
        Only the tour's own controls are marked data-emojinize="ui": the
        extension emojinizes the sample story inside #step, as the tour asks. -->
   <main class="pg pg-tour">
@@ -48,8 +48,6 @@
       <div><b>The tour runs with the extension.</b> Add Emojinize to Chrome and this tour opens by itself, driven by the real menu, right click and shortcuts.</div>
       <a class="sbtn primary sm" href="https://chromewebstore.google.com/detail/cbofieekacidabdkojipfaokcahhbplm" data-store="tour">Add to Chrome</a>
     </div>
-
-    <div class="ttop" data-emojinize="ui"><span>Welcome tour · 7 steps</span><button class="inl" id="skip" type="button">Skip tour</button></div>
 
     <div class="trail">
       <ol class="rail" id="rail" aria-label="Steps" data-emojinize="ui"></ol>

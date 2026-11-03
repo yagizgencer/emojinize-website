@@ -58,7 +58,6 @@
     if (version) url.searchParams.set("version", version);
     url.searchParams.set("env", env);
     $("fb-tally-link").href = url.href;
-    $("fb-after").textContent = "That form is hosted for us by Tally. Nothing from the pages you read is attached.";
     form.hidden = true;
     $("fb-tally").hidden = false;
     return;

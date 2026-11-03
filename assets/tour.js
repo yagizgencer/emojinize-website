@@ -78,10 +78,10 @@
       title: () => "Or just the part you want",
       body: () =>
         `Select a few words, then click the icon that pops up next to them, or right click your selection and choose ${ctl("Emojinize")}.`,
+      // The selected sentence gets its emojis where it is, as in the writer.
       extra: () =>
-        `<div class="story"><p><mark class="sel">${E.esc(S.p2[0][0])}</mark> ${E.esc(S.p2[1][0])}</p></div>` +
-        `<div class="popcard"><div class="ph">${LOGO.replace('alt="Emojinize"', 'alt=""')}Emojinize</div>` +
-        `<p class="an" data-mode="ontop" data-render="p2first"></p></div>`,
+        `<div class="story"><p class="an" data-mode="ontop" data-later>` +
+        `<mark class="sel">${E.annotate([S.p2[0]])}</mark> ${E.esc(S.p2[1][0])}</p></div>`,
     },
     {
       deco: ["✍️", "💌", "🎈"],
@@ -122,20 +122,32 @@
     },
   ];
 
-  // The selection step's card shows the first sentence of the second paragraph.
-  const samples = Object.assign({}, S, { p2first: [S.p2[0]] });
+  // The selection step: the sentence shows selected, then gets its emojis.
+  let picking = 0;
+  function pick(el) {
+    const done = () => {
+      el.querySelector(".sel")?.classList.add("off");
+      E.land(el);
+    };
+    E.glue(el);
+    E.fit(el);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) done();
+    else picking = setTimeout(done, 1200);
+  }
 
   function show(index, focus) {
+    clearTimeout(picking);
     current = Math.max(0, Math.min(STEPS.length - 1, index));
     const step = STEPS[current];
     stepEl.innerHTML =
       `<div class="step-c">${deco(step.deco)}<h1 class="disp sm" tabindex="-1">${step.title()}</h1>` +
       `<p class="lede">${step.body()}</p>${step.extra()}</div>`;
     stepEl.querySelectorAll("[data-render]").forEach((el) => {
-      const s = samples[el.dataset.render];
+      const s = S[el.dataset.render];
       el.innerHTML = E.annotate(typeof s[0] === "string" ? [s] : s, Number(el.dataset.start) || 0);
     });
-    E.land(stepEl);
+    stepEl.querySelectorAll(".an:not([data-later])").forEach((el) => E.land(el));
+    stepEl.querySelectorAll(".an[data-later]").forEach(pick);
 
     rail.querySelectorAll("button").forEach((b, i) => {
       b.classList.toggle("done", i < current);
@@ -160,8 +172,6 @@
     if (b) show(Number(b.dataset.step), true);
   });
   back.addEventListener("click", () => show(current - 1, true));
-  // As in the extension's tour: Skip goes to the last step, with the shortcuts.
-  document.getElementById("skip")?.addEventListener("click", () => show(STEPS.length - 1, true));
   next.addEventListener("click", () => {
     if (current === STEPS.length - 1) location.href = "/";
     else show(current + 1, true);

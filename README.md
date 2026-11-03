@@ -67,7 +67,7 @@ emojinize.com, are the whole hand-off:
 - `data-emojinize-tour="host"`: the extension runs the tour (its
   `welcome.js`, on the real popup, right click and shortcuts). `assets/tour.js`
   then leaves it alone, and the extension builds each step into `#step`, lists
-  the steps in `#rail`, and answers `#dots`, `#back`, `#next` and `#skip`.
+  the steps in `#rail`, and answers `#dots`, `#back` and `#next`.
   Only the tour's own controls are marked `data-emojinize="ui"` on that page:
   the extension emojinizes the sample story inside `#step`.
 

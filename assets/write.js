@@ -129,12 +129,21 @@
     });
     frag.append(cps.slice(pos).join(""));
     result.replaceChildren(frag);
+    window.Emojinize?.glue(result);
+  }
+
+  // Rows are sized once per frame, as emojis arrive (site.js fit).
+  let fitting = 0;
+  function refit() {
+    cancelAnimationFrame(fitting);
+    fitting = requestAnimationFrame(() => window.Emojinize?.fit(result));
   }
 
   function fill(i, emoji) {
     const w = result.querySelector(`.w[data-index="${i}"]`);
     if (!w) return;
     w.querySelector(".g").textContent = emoji;
+    refit();
     requestAnimationFrame(() => w.classList.add("got"));
   }
 
@@ -145,6 +154,7 @@
       if (!span || !span.emoji) w.replaceWith(w.querySelector(".t").textContent);
     });
     result.normalize();
+    refit();
   }
 
   async function run() {
