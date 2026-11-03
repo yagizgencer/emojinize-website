@@ -141,6 +141,12 @@
     send.disabled = true;
     say("Sending…");
     const turnstile = await turnstileToken();
+    if (config.TURNSTILE_SITE_KEY && !turnstile) {
+      // Turnstile wants a click this time ("Verify you are human" above).
+      say("Tick “Verify you are human” above, then send it again.", true);
+      send.disabled = false;
+      return;
+    }
     try {
       const response = await fetch(config.FEEDBACK_ENDPOINT, {
         method: "POST",
