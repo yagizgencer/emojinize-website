@@ -340,9 +340,13 @@ kbd {
   align-items: center;
   gap: 12px;
   width: 100%;
-  max-width: 680px;
   margin-inline: auto;
   text-align: center;
+}
+
+.whead .lede {
+  max-width: none;
+  text-wrap: balance;
 }
 
 /* The tour's three emoji, each bobbing on its own beat. */
@@ -1497,14 +1501,15 @@ html[data-emojinize-tour="host"] #step kbd {
 }
 
 /* ---------- wide screens: the layout chosen on 2026-11-03 ----------
-   From 1,100px: a page up to 1,440px with type about 20% bigger, an extra
-   large top bar lined up with the page's edges, and the writer, the feedback
-   form and the policy across the page. Below that the top bar would not fit
-   on one row, so narrower windows keep the sizes above. */
+   From 1,100px: a page up to 1,360px with type about 15% bigger, a large
+   top bar lined up with the page's edges, and the writer, the feedback form
+   and the policy across the page ("Large" page and top bar in the size
+   explorer, after the first, bigger version). Narrower windows keep the
+   sizes above. */
 
 @media (min-width: 1100px) {
   :root {
-    --pgw: 1440px;
+    --pgw: 1360px;
     --gut: 32px;
   }
 
@@ -1513,70 +1518,66 @@ html[data-emojinize-tour="host"] #step kbd {
   }
 
   .snav {
-    column-gap: 28px;
-    padding: 22px calc(max(0px, (100% - var(--pgw)) / 2) + var(--gut)) 0;
+    column-gap: 24px;
+    padding: 20px calc(max(0px, (100% - var(--pgw)) / 2) + var(--gut)) 0;
   }
 
   .slogo {
-    gap: 13px;
-    padding-bottom: 22px;
-    font-size: 27px;
+    gap: 11px;
+    padding-bottom: 21px;
+    font-size: 23px;
   }
 
   .slogo img {
-    width: 48px;
-    height: 40px;
+    width: 38px;
+    height: 32px;
   }
 
   .links a {
-    margin: 0 21px;
-    padding: 14px 2px 28px;
-    font-size: 18px;
-  }
-
-  .links a[aria-current="page"] {
-    box-shadow: inset 0 -3px 0 var(--accent);
+    margin: 0 17px;
+    padding: 12px 2px 24px;
+    font-size: 16.5px;
   }
 
   .storelink {
-    gap: 8px;
-    padding-bottom: 29px;
-    font-size: 17px;
+    gap: 7px;
+    padding-bottom: 24px;
+    font-size: 16px;
   }
 
   .storelink svg {
-    width: 15px;
-    height: 15px;
+    width: 14px;
+    height: 14px;
   }
 
   .pg {
     max-width: var(--pgw);
-    padding-block: 64px 96px;
+    padding-block: 56px 88px;
     padding-left: max(var(--gut), env(safe-area-inset-left, 0px));
     padding-right: max(var(--gut), env(safe-area-inset-right, 0px));
-    gap: 32px;
+    gap: 30px;
   }
 
   .disp {
-    font-size: 60px;
+    font-size: 54px;
   }
 
   .disp.sm {
-    font-size: 44px;
+    font-size: 40px;
   }
 
   .lede {
     max-width: 60ch;
-    font-size: 19.5px;
+    font-size: 18.5px;
   }
 
   .scard {
-    padding: 34px 38px;
+    padding: 32px 36px;
   }
 
   .deco {
     gap: 18px;
-    font-size: 40px;
+    font-size: 38px;
   }
 
   .cap {
@@ -1584,7 +1585,7 @@ html[data-emojinize-tour="host"] #step kbd {
   }
 
   .note {
-    font-size: 14.5px;
+    font-size: 14px;
   }
 
   .label {
@@ -1592,52 +1593,52 @@ html[data-emojinize-tour="host"] #step kbd {
   }
 
   .sbtn {
-    min-height: 46px;
+    min-height: 44px;
     padding: 0 22px;
-    font-size: 15.5px;
+    font-size: 15px;
   }
 
   .sbtn.lg {
-    min-height: 58px;
+    min-height: 54px;
     padding: 0 30px;
-    font-size: 17.5px;
+    font-size: 17px;
   }
 
   .sbtn.sm {
-    min-height: 36px;
+    min-height: 35px;
     padding: 0 15px;
-    font-size: 14px;
+    font-size: 13.5px;
   }
 
   .seg button {
     padding: 8px 14px;
-    font-size: 13.5px;
+    font-size: 13px;
   }
 
   .demo-body p.an,
   .story p.an {
-    font-size: 19px;
+    font-size: 18px;
   }
 
   .story-t {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .field {
     padding: 14px 18px;
-    font-size: 17px;
+    font-size: 16.5px;
   }
 
   .result {
-    font-size: 20px;
+    font-size: 19px;
   }
 
   .tile {
-    font-size: 15.5px;
+    font-size: 15px;
   }
 
   .tile .e {
-    font-size: 34px;
+    font-size: 32px;
   }
 
   .rail button {
@@ -1652,7 +1653,7 @@ html[data-emojinize-tour="host"] #step kbd {
 
   .pg-write .field,
   .pg-write .result {
-    min-height: 300px;
+    min-height: 280px;
   }
 
   /* Feedback: the form across the page, the five topics on one row. */
@@ -1667,15 +1668,15 @@ html[data-emojinize-tour="host"] #step kbd {
 
   .ftiles .tile {
     padding: 18px 12px;
-    font-size: 15.5px;
+    font-size: 15px;
   }
 
   .ftiles .tile .e {
-    font-size: 32px;
+    font-size: 30px;
   }
 
   #msg {
-    min-height: 200px;
+    min-height: 190px;
   }
 
   /* Privacy: the policy in two columns. */
@@ -1696,16 +1697,16 @@ html[data-emojinize-tour="host"] #step kbd {
   }
 
   .policy h2 {
-    font-size: 24px;
+    font-size: 23px;
   }
 
   /* The tour as the extension runs it, at the preview's sizes. */
   html[data-emojinize-tour="host"] #step .copy h1 {
-    font-size: 44px;
+    font-size: 40px;
   }
 
   html[data-emojinize-tour="host"] #step .copy p {
-    font-size: 19.5px;
+    font-size: 18.5px;
   }
 }
 
