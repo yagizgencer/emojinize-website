@@ -22,13 +22,6 @@
   if (!form) return;
 
   const SOURCES = ["popup", "tour", "prompt", "uninstall", "site"];
-  const FROM = {
-    popup: "the popup",
-    tour: "the tour",
-    prompt: "the popup's question",
-    uninstall: "removing the extension",
-    site: "the website",
-  };
   const VERSION = /^\d{1,5}(?:\.\d{1,5}){0,3}$/;
   // One question per topic, as the message box's placeholder.
   const ASK = {
@@ -43,8 +36,6 @@
   const source = SOURCES.includes(params.get("source")) ? params.get("source") : "site";
   const version = VERSION.test(params.get("version") || "") ? params.get("version") : "";
   const env = ["prod", "dev"].includes(params.get("env")) ? params.get("env") : "prod";
-
-  $("also").textContent = `Also sent: ${version ? `version ${version}, ` : ""}opened from ${FROM[source]}`;
 
   if (source === "uninstall") {
     $("fb-title").textContent = "Sorry to see you go";

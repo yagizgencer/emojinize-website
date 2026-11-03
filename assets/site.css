@@ -35,6 +35,9 @@
   --hl: rgba(255, 176, 64, 0.22);
   --hl-hover: rgba(255, 176, 64, 0.42);
   --sel: rgba(96, 165, 250, 0.3);
+  /* The emojis over emojinized words, as a share of the words' size; site.js
+     fit() reads it too. Chosen in the size explorer: 115%. */
+  --glyph-size: 1.15;
   --glow-amber: rgba(255, 176, 32, 0.22);
   --glow-pink: rgba(255, 122, 168, 0.16);
   --glow-sky: rgba(96, 165, 250, 0.16);
@@ -527,9 +530,15 @@ kbd {
   --mark: var(--hl);
 }
 
+/* While site.js fit() sizes the rows: a new size shows at once. */
+.an.refit .g {
+  transition: none !important;
+}
+
+/* --dx: how far site.js fit() slid the row off its words' centre. */
 .an .g {
   position: absolute;
-  left: 50%;
+  left: calc(50% + var(--dx, 0px));
   font-family: var(--emoji);
   font-style: normal;
   font-weight: 400;
@@ -539,15 +548,17 @@ kbd {
   pointer-events: none;
 }
 
+/* Room above each line: the words' box (1.2em), the row of emojis, and
+   0.38em of air between the row and the line above. */
 .an[data-mode="ontop"] {
-  line-height: 2.4;
+  line-height: max(2.4em, calc(1.62em + var(--glyph-size) * 1em));
 }
 
 /* --fit: the size site.js fit() gives the rows of a line, so neighbours keep
    apart; drawn smaller about the row's foot. */
 .an[data-mode="ontop"] .g {
   bottom: calc(100% + 0.04em);
-  font-size: 0.78em;
+  font-size: calc(var(--glyph-size) * 1em);
   transform: translate(-50%, 0) scale(var(--fit, 1));
   transform-origin: 50% 100%;
 }
@@ -580,11 +591,12 @@ kbd {
   transition-delay: 0s;
 }
 
-/* A glyph wider than its words is drawn smaller (--fit), so it covers them
-   and not their neighbours. */
+/* Over the words at the emojis' size, between 1em and 1.25em; a glyph wider
+   than its words is drawn smaller (--fit), so it covers them and not their
+   neighbours (in [data-room], the box is padded to fit it). */
 .an[data-mode="toggle"] .g {
   top: 50%;
-  font-size: 1em;
+  font-size: clamp(1em, var(--glyph-size) * 1em, 1.25em);
   opacity: 0;
   transform: translate(-50%, -50%) scale(var(--fit, 1));
 }
@@ -673,11 +685,11 @@ kbd {
 }
 
 .demo-body p.an {
-  font-size: 16.5px;
+  font-size: 17.5px;
 }
 
 .story-t {
-  font: var(--dw) 23px/1.2 var(--body);
+  font: var(--dw) 24px/1.2 var(--body);
   letter-spacing: var(--dls);
 }
 
@@ -734,7 +746,7 @@ textarea.field {
 .result {
   min-height: 160px;
   padding: 4px 2px;
-  font-size: 17.5px;
+  font-size: 18.5px;
   white-space: pre-wrap;
 }
 
@@ -949,7 +961,7 @@ textarea.field {
 }
 
 .story p.an {
-  font-size: 15.5px;
+  font-size: 16.5px;
 }
 
 .sel {
@@ -1055,10 +1067,9 @@ textarea.field {
   font-size: 24px;
 }
 
-.also {
-  margin-right: auto;
-  color: var(--muted);
-  font-size: 12.5px;
+/* Send, on the right. */
+.fcard .wrow {
+  justify-content: flex-end;
 }
 
 .thanks {
@@ -1617,11 +1628,11 @@ html[data-emojinize-tour="host"] #step kbd {
 
   .demo-body p.an,
   .story p.an {
-    font-size: 18px;
+    font-size: 19px;
   }
 
   .story-t {
-    font-size: 26px;
+    font-size: 27.5px;
   }
 
   .field {
@@ -1630,7 +1641,7 @@ html[data-emojinize-tour="host"] #step kbd {
   }
 
   .result {
-    font-size: 19px;
+    font-size: 20px;
   }
 
   .tile {
