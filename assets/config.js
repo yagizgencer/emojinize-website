@@ -37,7 +37,8 @@
     FEEDBACK_ENDPOINT: local
       ? "https://emojinize-feedback.emojinize.workers.dev/v1/feedback"
       : "https://emojinize-feedback-prod.emojinize.workers.dev/v1/feedback",
-    TURNSTILE_SITE_KEY: "",
+    // The widget knows emojinize.com only; the dev Worker asks for no token.
+    TURNSTILE_SITE_KEY: local ? "" : "0x4AAAAAAFx7TQXxHBHiRvrL",
     // For 0.9 installs, which still open it directly.
     TALLY_FORM: "https://tally.so/r/44gJXB",
   });

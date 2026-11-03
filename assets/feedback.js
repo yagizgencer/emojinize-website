@@ -110,6 +110,20 @@
     status.classList.toggle("bad", bad);
   }
 
+  /**
+   * Turnstile's token, waiting up to a few seconds for it: the check runs by
+   * itself when the page opens and usually takes a moment. "" without one.
+   */
+  async function turnstileToken() {
+    if (!config.TURNSTILE_SITE_KEY) return "";
+    for (let waited = 0; waited < 8000; waited += 250) {
+      const token = widget !== null && window.turnstile ? window.turnstile.getResponse(widget) : "";
+      if (token) return token;
+      await new Promise((resolve) => setTimeout(resolve, 250));
+    }
+    return "";
+  }
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const topic = form.elements.topic.value;
@@ -124,9 +138,9 @@
       message.focus();
       return;
     }
-    const turnstile = widget !== null && window.turnstile ? window.turnstile.getResponse(widget) || "" : "";
     send.disabled = true;
     say("Sending…");
+    const turnstile = await turnstileToken();
     try {
       const response = await fetch(config.FEEDBACK_ENDPOINT, {
         method: "POST",
@@ -140,7 +154,9 @@
         say(
           response.status === 429
             ? "Too many messages from here at once. Wait a minute and send it again."
-            : "Your message didn't go through. Try again in a moment.",
+            : response.status === 403
+              ? "We couldn't check that a person is sending this. Reload the page and send it again."
+              : "Your message didn't go through. Try again in a moment.",
           true
         );
         if (widget !== null && window.turnstile) window.turnstile.reset(widget);
