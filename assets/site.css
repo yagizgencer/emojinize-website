@@ -678,6 +678,21 @@ kbd {
   margin-right: auto;
 }
 
+/* Home's sample: the story's title beside the switch; where both don't fit,
+   the switch goes above it (wrap-reverse), on the right. */
+.demo > .demo-head {
+  flex-wrap: wrap-reverse;
+}
+
+.demo-head .story-t {
+  min-width: 0;
+  margin-right: auto;
+}
+
+.demo > .demo-head .seg {
+  margin-left: auto;
+}
+
 .demo-body {
   display: flex;
   flex-direction: column;

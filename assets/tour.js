@@ -16,7 +16,7 @@
   if (document.documentElement.dataset.emojinizeTour === "host") return;
 
   const E = window.Emojinize;
-  const S = window.EmojinizeSamples;
+  const S = window.EmojinizeSamples?.monday;
   const $ = (id) => document.getElementById(id);
   const stepEl = $("step");
   const rail = $("rail");

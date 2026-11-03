@@ -252,12 +252,16 @@
     requestAnimationFrame(() => requestAnimationFrame(() => els.forEach((el) => el.classList.add("on"))));
   }
 
-  /** Fills every [data-render] under `scope` from samples.js. */
+  /**
+   * Fills every [data-render] under `scope` from samples.js, from the story
+   * the nearest [data-story] names (Home: "lake"), or the tour's ("monday").
+   */
   function render(scope) {
     const samples = window.EmojinizeSamples;
     if (!samples) return;
     scope.querySelectorAll("[data-render]").forEach((el) => {
-      const sample = samples[el.dataset.render];
+      const story = samples[el.closest("[data-story]")?.dataset.story || "monday"];
+      const sample = story && story[el.dataset.render];
       if (!sample) return;
       const sentences = typeof sample[0] === "string" ? [sample] : sample;
       el.innerHTML = annotate(sentences, Number(el.dataset.start) || 0);

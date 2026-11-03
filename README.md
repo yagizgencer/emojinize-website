@@ -13,8 +13,11 @@ cookies and no analytics.
 | `/privacy/` | `privacy/index.html` | The privacy policy |
 
 `assets/site.css` holds the look, in the extension's own colours. It follows
-the system's light or dark mode. `assets/samples.js` is real model output: the
-welcome tour's sample, copied from the extension's `tour-data.js`.
+the system's light or dark mode. `assets/samples.js` is real model output, in
+two stories: the tour's ("A very Monday morning", copied from the extension's
+`tour-data.js`) and Home's ("Saturday at the lake", run through the model
+with the extension's `scripts/tour-data.js` `run()`). Home's sample card
+names its story with `data-story`.
 
 ## Preview locally
 
