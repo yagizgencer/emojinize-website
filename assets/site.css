@@ -535,8 +535,13 @@ kbd {
   transition: none !important;
 }
 
-/* --dx: how far site.js fit() slid the row off its words' centre. */
+/* --dx: how far site.js fit() slid the row off its words' centre.
+   A row of emojis is always laid out left to right, as the model wrote it:
+   inside right-to-left text (Arabic) it would otherwise come out reversed,
+   and 🥶➡️🔥😊 ("warmed up") would read 😊🔥➡️🥶. */
 .an .g {
+  direction: ltr;
+  unicode-bidi: isolate;
   position: absolute;
   left: calc(50% + var(--dx, 0px));
   font-family: var(--emoji);
@@ -678,19 +683,166 @@ kbd {
   margin-right: auto;
 }
 
-/* Home's sample: the story's title beside the switch; where both don't fit,
-   the switch goes above it (wrap-reverse), on the right. */
-.demo > .demo-head {
-  flex-wrap: wrap-reverse;
+/* Home's sample in six languages (carousel.js): the language tabs, then one
+   layer per language, stacked in one cell so the card keeps the height of
+   the longest and the page never jumps. Without JavaScript, only English. */
+.lc-bar {
+  container-type: inline-size;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.demo-head .story-t {
+.lc-tabs {
+  flex: 1;
   min-width: 0;
-  margin-right: auto;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--r-btn);
+  background: var(--sunken);
 }
 
-.demo > .demo-head .seg {
-  margin-left: auto;
+.lc-tabs button {
+  position: relative;
+  flex: auto;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: var(--r-btn);
+  background: none;
+  color: var(--muted);
+  font-weight: 550;
+  font-size: 13px;
+  line-height: 1.1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.lc-tabs button:hover {
+  color: var(--fg);
+}
+
+.lc-tabs button[aria-selected="true"] {
+  background: var(--seg-on);
+  color: var(--fg);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14);
+}
+
+/* The active tab fills like a timer while the languages rotate. */
+.lc-fill {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.lc.lc-run [aria-selected="true"] .lc-fill {
+  animation: lc-fill var(--lc-dur) linear forwards;
+}
+
+@keyframes lc-fill {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Where the six don't fit on one row (phones, and the hero's narrow column
+   from 760 to 1,100px): two rows of three. */
+@container (max-width: 480px) {
+  .lc-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-radius: 16px;
+  }
+
+  .lc-tabs button {
+    padding-inline: 4px;
+  }
+}
+
+.lc-pause {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-btn);
+  background: var(--bg);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.lc-pause:hover {
+  border-color: var(--edge);
+  color: var(--fg);
+}
+
+.lc-i-play,
+.lc.lc-held .lc-i-pause {
+  display: none;
+}
+
+.lc.lc-held .lc-i-play {
+  display: block;
+}
+
+html:not(.js) .lc-bar,
+html:not(.js) .lc-layer:not(:first-child) {
+  display: none;
+}
+
+/* Room between the tabs and the emojis over the title's words. */
+.lc-stage {
+  display: grid;
+  margin-top: 16px;
+}
+
+.lc-layer {
+  grid-area: 1 / 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Hidden layers keep their layout (site.js fits their rows, carousel.js
+   orders them). The next one fades in a beat after the last fades out. */
+.js .lc-layer {
+  transition: opacity 0.32s ease, visibility 0s linear 0.32s;
+}
+
+.js .lc-layer:not(.lc-cur) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.js .lc-layer.lc-cur {
+  transition: opacity 0.32s ease 0.12s, visibility 0s;
+}
+
+.lc-layer[lang="ar"] .story-t,
+.lc-layer[lang="hi"] .story-t {
+  letter-spacing: 0;
+}
+
+/* Each emoji lands --lc-per after the one before it, with no cap, in the
+   order carousel.js gives (--i). */
+.js .lc .an .w,
+.js .lc .an[data-mode="ontop"] .g {
+  transition-delay: calc(var(--i, 0) * var(--lc-per, 70ms));
+}
+
+.lc-snap,
+.lc-snap * {
+  transition: none !important;
+  animation: none !important;
 }
 
 .demo-body {
@@ -1639,6 +1791,11 @@ html[data-emojinize-tour="host"] #step kbd {
   .seg button {
     padding: 8px 14px;
     font-size: 13px;
+  }
+
+  .lc-tabs button {
+    padding-block: 8px;
+    font-size: 13.5px;
   }
 
   .demo-body p.an,

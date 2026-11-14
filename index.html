@@ -23,6 +23,7 @@
   <script src="/assets/config.js" defer></script>
   <script src="/assets/samples.js" defer></script>
   <script src="/assets/site.js" defer></script>
+  <script src="/assets/carousel.js" defer></script>
 </head>
 <body>
   <header class="snav" data-emojinize="ui">
@@ -61,17 +62,46 @@
         </div>
       </div>
 
-      <div class="scard demo" data-sample data-room data-story="lake" data-emojinize="ui">
-        <div class="demo-head">
-          <h2 class="an story-t" data-mode="ontop" data-render="title">Saturday at the lake</h2>
-          <div class="seg" role="radiogroup" aria-label="Emoji display" data-modes>
-            <button type="button" role="radio" aria-checked="true" data-mode-set="ontop">On top</button>
-            <button type="button" role="radio" aria-checked="false" data-mode-set="toggle">Toggle</button>
+      <div class="scard demo lc" data-room data-carousel data-emojinize="ui">
+        <div class="lc-bar">
+          <div class="lc-tabs" role="tablist" aria-label="Language of the sample">
+            <button type="button" role="tab" id="lc-tab-en" aria-controls="lc-en" aria-selected="true" lang="en">English<span class="lc-fill"></span></button>
+            <button type="button" role="tab" id="lc-tab-zh" aria-controls="lc-zh" aria-selected="false" tabindex="-1" lang="zh">中文<span class="lc-fill"></span></button>
+            <button type="button" role="tab" id="lc-tab-es" aria-controls="lc-es" aria-selected="false" tabindex="-1" lang="es">Español<span class="lc-fill"></span></button>
+            <button type="button" role="tab" id="lc-tab-hi" aria-controls="lc-hi" aria-selected="false" tabindex="-1" lang="hi">हिन्दी<span class="lc-fill"></span></button>
+            <button type="button" role="tab" id="lc-tab-ar" aria-controls="lc-ar" aria-selected="false" tabindex="-1" lang="ar">العربية<span class="lc-fill"></span></button>
+            <button type="button" role="tab" id="lc-tab-tr" aria-controls="lc-tr" aria-selected="false" tabindex="-1" lang="tr">Türkçe<span class="lc-fill"></span></button>
           </div>
+          <button type="button" class="lc-pause" aria-label="Pause"><svg class="lc-i-pause" width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><rect x="2.5" y="2" width="2.4" height="8" rx="0.8"/><rect x="7.1" y="2" width="2.4" height="8" rx="0.8"/></svg><svg class="lc-i-play" width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M3.5 2.2v7.6a.6.6 0 0 0 .9.5l6-3.8a.6.6 0 0 0 0-1L4.4 1.7a.6.6 0 0 0-.9.5z"/></svg></button>
         </div>
-        <div class="demo-body" role="group" aria-label="Sample">
-          <p class="an" data-mode="ontop" data-render="p1" data-start="2">We hit the road before sunrise and rented a boat at the lake. The water was calm, so we rowed out to the island.</p>
-          <p class="an" data-mode="ontop" data-render="p2" data-start="11">Back at the cabin, we drank hot chocolate by the fire. It was the best day of the whole summer.</p>
+        <div class="lc-stage">
+          <div class="lc-layer lc-cur" id="lc-en" role="tabpanel" aria-labelledby="lc-tab-en" lang="en" data-story="lake">
+            <h2 class="an story-t" data-mode="ontop" data-render="title">A weekend by the lake</h2>
+            <div class="demo-body">
+              <p class="an" data-mode="ontop" data-render="p1">We hit the road at dawn and went fishing on the lake. Then it started pouring, and we got soaked.</p>
+              <p class="an" data-mode="ontop" data-render="p2">At camp, we warmed up by the fire and laughed a lot. Then we snuggled into our sleeping bags and fell asleep.</p>
+            </div>
+          </div>
+          <div class="lc-layer" id="lc-zh" role="tabpanel" aria-labelledby="lc-tab-zh" lang="zh" data-story="lake-zh">
+            <h2 class="an story-t" data-mode="ontop" data-render="title"></h2>
+            <div class="demo-body"><p class="an" data-mode="ontop" data-render="p1"></p><p class="an" data-mode="ontop" data-render="p2"></p></div>
+          </div>
+          <div class="lc-layer" id="lc-es" role="tabpanel" aria-labelledby="lc-tab-es" lang="es" data-story="lake-es">
+            <h2 class="an story-t" data-mode="ontop" data-render="title"></h2>
+            <div class="demo-body"><p class="an" data-mode="ontop" data-render="p1"></p><p class="an" data-mode="ontop" data-render="p2"></p></div>
+          </div>
+          <div class="lc-layer" id="lc-hi" role="tabpanel" aria-labelledby="lc-tab-hi" lang="hi" data-story="lake-hi">
+            <h2 class="an story-t" data-mode="ontop" data-render="title"></h2>
+            <div class="demo-body"><p class="an" data-mode="ontop" data-render="p1"></p><p class="an" data-mode="ontop" data-render="p2"></p></div>
+          </div>
+          <div class="lc-layer" id="lc-ar" role="tabpanel" aria-labelledby="lc-tab-ar" lang="ar" dir="rtl" data-story="lake-ar">
+            <h2 class="an story-t" data-mode="ontop" data-render="title"></h2>
+            <div class="demo-body"><p class="an" data-mode="ontop" data-render="p1"></p><p class="an" data-mode="ontop" data-render="p2"></p></div>
+          </div>
+          <div class="lc-layer" id="lc-tr" role="tabpanel" aria-labelledby="lc-tab-tr" lang="tr" data-story="lake-tr">
+            <h2 class="an story-t" data-mode="ontop" data-render="title"></h2>
+            <div class="demo-body"><p class="an" data-mode="ontop" data-render="p1"></p><p class="an" data-mode="ontop" data-render="p2"></p></div>
+          </div>
         </div>
       </div>
     </section>

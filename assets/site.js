@@ -52,14 +52,20 @@
    * a phrase is an inline-block, and a line may break between an inline-block
    * and the comma after it. The phrase and its neighbours go in a nowrap span.
    */
+  // Chinese and Japanese have no spaces, so a run of text there can be a whole
+  // clause: only punctuation is kept with the phrase.
+  const GLUE_ANY = [/\S+$/, /^\S+/];
+  const GLUE_CJK = [/[“‘「『（(]+$/, /^[，。、！？；：”’」』）),.!?;:]+/];
+
   function glue(scope) {
     for (const el of annotated(scope)) {
+      const [reBefore, reAfter] = /^(zh|ja)\b/.test(el.closest("[lang]")?.lang || "") ? GLUE_CJK : GLUE_ANY;
       el.querySelectorAll(".w").forEach((w) => {
         if (w.parentElement.classList.contains("nb")) return;
         const prev = w.previousSibling;
         const next = w.nextSibling;
-        const before = prev?.nodeType === 3 ? prev.data.match(/\S+$/) : null;
-        const after = next?.nodeType === 3 ? next.data.match(/^\S+/) : null;
+        const before = prev?.nodeType === 3 ? prev.data.match(reBefore) : null;
+        const after = next?.nodeType === 3 ? next.data.match(reAfter) : null;
         if (!before && !after) return;
         const nb = document.createElement("span");
         nb.className = "nb";
@@ -238,9 +244,13 @@
     return xs;
   }
 
-  /** Lets the emojis of every annotated element under `scope` land again. */
+  /**
+   * Lets the emojis of every annotated element under `scope` land again.
+   * Home's language carousel ([data-carousel]) is drawn and fitted here too,
+   * but carousel.js decides when its emojis land.
+   */
   function land(scope) {
-    const els = annotated(scope);
+    const els = annotated(scope).filter((el) => !el.closest("[data-carousel]"));
     glue(scope);
     fit(scope);
     els.forEach((el) => el.classList.remove("on"));
