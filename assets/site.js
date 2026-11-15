@@ -245,6 +245,33 @@
   }
 
   /**
+   * --i on every annotated word or phrase under `scope`, in reading order:
+   * lines from the top, each in the reading direction (right to left for
+   * Arabic). Each emoji then lands --i steps after the first (Home's
+   * carousel, the tour). Returns how many there are.
+   */
+  function order(scope) {
+    const rtl = getComputedStyle(scope).direction === "rtl";
+    const items = [...scope.querySelectorAll(".an .w")].map((w) => {
+      const r = (w.querySelector(".t") || w).getBoundingClientRect();
+      return { w, y: r.top + r.height / 2, x: r.left + r.width / 2, h: r.height };
+    });
+    items.sort((a, b) => a.y - b.y);
+    const lines = [];
+    for (const it of items) {
+      const line = lines[lines.length - 1];
+      if (line && Math.abs(line[0].y - it.y) < line[0].h / 2) line.push(it);
+      else lines.push([it]);
+    }
+    let i = 0;
+    for (const line of lines) {
+      line.sort((a, b) => (rtl ? b.x - a.x : a.x - b.x));
+      for (const it of line) it.w.style.setProperty("--i", String(i++));
+    }
+    return i;
+  }
+
+  /**
    * Lets the emojis of every annotated element under `scope` land again.
    * Home's language carousel ([data-carousel]) is drawn and fitted here too,
    * but carousel.js decides when its emojis land.
@@ -314,7 +341,7 @@
     if (word) word.classList.toggle("show");
   });
 
-  window.Emojinize = Object.freeze({ esc, annotate, land, render, installed, glue, fit });
+  window.Emojinize = Object.freeze({ esc, annotate, land, render, installed, glue, fit, order });
 
   // Lines break elsewhere at another width, and an emoji font can arrive late.
   // Only the width moves a line break: a phone's address bar showing or

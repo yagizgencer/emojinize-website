@@ -43,26 +43,9 @@
 
   const annotated = (layer) => [...layer.querySelectorAll(".an")];
 
-  /** --i on each phrase: lines top to bottom, each in reading direction. */
+  /** --i on each phrase in reading order (site.js order()), and the count. */
   function order(layer) {
-    const rtl = getComputedStyle(layer).direction === "rtl";
-    const items = [...layer.querySelectorAll(".an .w")].map((w) => {
-      const r = w.querySelector(".t").getBoundingClientRect();
-      return { w, y: r.top + r.height / 2, x: r.left + r.width / 2, h: r.height };
-    });
-    items.sort((a, b) => a.y - b.y);
-    const lines = [];
-    for (const it of items) {
-      const line = lines[lines.length - 1];
-      if (line && Math.abs(line[0].y - it.y) < line[0].h / 2) line.push(it);
-      else lines.push([it]);
-    }
-    let i = 0;
-    for (const line of lines) {
-      line.sort((a, b) => (rtl ? b.x - a.x : a.x - b.x));
-      for (const it of line) it.w.style.setProperty("--i", String(i++));
-    }
-    layer.dataset.spans = String(i);
+    layer.dataset.spans = String(window.Emojinize.order(layer));
   }
 
   const orderAll = () => layers.forEach(order);

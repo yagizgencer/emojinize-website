@@ -151,6 +151,11 @@
       const s = S[el.dataset.render];
       el.innerHTML = E.annotate(typeof s[0] === "string" ? [s] : s, Number(el.dataset.start) || 0);
     });
+    // As on Home: every emoji lands 70 ms after the one before it, in
+    // reading order across the whole step (site.css .tcard).
+    E.glue(stepEl);
+    E.fit(stepEl);
+    E.order(stepEl);
     stepEl.querySelectorAll(".an:not([data-later])").forEach((el) => E.land(el));
     stepEl.querySelectorAll(".an[data-later]").forEach(pick);
 

@@ -1044,6 +1044,13 @@ textarea.field {
   outline: none;
 }
 
+/* The tour's samples land as Home's carousel does: each emoji 70 ms after
+   the one before it, in reading order (tour.js, site.js order()), no cap. */
+.js .tcard .an[data-mode="ontop"] .w,
+.js .tcard .an[data-mode="ontop"] .g {
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+
 .choice {
   display: flex;
   flex-direction: column;
