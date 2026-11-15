@@ -41,7 +41,7 @@
 
   const STEPS = [
     {
-      deco: ["👋", "😊", "✨"],
+      deco: ["👋", "😊", "🎬"],
       title: () => "Meet Emojinize",
       body: () =>
         "Words and phrases you read come to life with emojis, on any website. " +
@@ -65,7 +65,7 @@
         `<li>Click the pin 📌 next to ${LOGO} Emojinize.</li></ol>`,
     },
     {
-      deco: ["📄", "➡️", "🤩"],
+      deco: ["📄", "➡️", "😀"],
       title: () => (auto === "on" ? "Every page, as it opens" : "A whole page in one click"),
       body: () =>
         auto === "on"
@@ -84,7 +84,7 @@
         `<mark class="sel">${E.annotate([S.p2[0]])}</mark> ${E.esc(S.p2[1][0])}</p></div>`,
     },
     {
-      deco: ["✍️", "💌", "🎈"],
+      deco: ["✍️", "🪄", "🌈"],
       title: () => "Write your own",
       body: () => "Have a message or a post of your own? Emojinize it in the writer, then copy it with its emojis.",
       extra: () =>
@@ -93,7 +93,7 @@
         `<li>Type or paste anything, press ${ctl("Emojinize")}, and copy the result.</li></ol>`,
     },
     {
-      deco: ["🎨", "🪄", "🌈"],
+      deco: ["⚙️", "🎚️", "👌"],
       title: () => "Make it yours",
       body: () =>
         `Open Emojinize and click ${ctl("Display settings")}. Try a bigger emoji size, or switch ${ctl("Emoji display")} to ${ctl("Toggle")}. ` +
@@ -106,7 +106,7 @@
         `${sample("p", "", "p3", 0)}</div>`,
     },
     {
-      deco: ["🎉", "🫶", "🚀"],
+      deco: ["🏁", "🎉", "🚀"],
       title: () => "You're all set",
       body: () => "Four shortcuts for when your hands are on the keyboard.",
       extra: () =>
