@@ -530,8 +530,11 @@ kbd {
   --mark: var(--hl);
 }
 
-/* While site.js fit() sizes the rows: a new size shows at once. */
-.an.refit .g {
+/* While site.js fit() sizes the rows: a new size shows at once. Not while a
+   carousel language's emojis are landing (carousel.js .lc-landing): taking
+   their transitions off cancels the ones still waiting, and every emoji not
+   yet landed showed at once (a font arriving late on a first visit). */
+.an.refit:not(.lc-landing .an) .g {
   transition: none !important;
 }
 

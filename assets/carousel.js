@@ -70,6 +70,7 @@
   /** Takes a layer's emojis off at once, ready to land again. */
   function reset(layer) {
     layer.classList.add("lc-snap");
+    layer.classList.remove("lc-landing");
     annotated(layer).forEach((el) => el.classList.remove("on"));
     void layer.offsetWidth;
     layer.classList.remove("lc-snap");
@@ -103,8 +104,21 @@
     }
     cur = k;
     select(k);
-    later(() => annotated(inn).forEach((el) => el.classList.add("on")), out === inn ? 60 : ENTER);
+    later(() => land(inn), out === inn ? 60 : ENTER);
     schedule();
+  }
+
+  /**
+   * Lets a layer's emojis land, one PER apart. While they do, the layer is
+   * .lc-landing, which keeps site.js's refit (a font arriving, the width
+   * changing) from taking their transitions off: that cancels the ones still
+   * waiting, and every emoji not yet landed showed at once.
+   */
+  function land(layer) {
+    const spans = Number(layer.dataset.spans) || 0;
+    layer.classList.add("lc-landing");
+    annotated(layer).forEach((el) => el.classList.add("on"));
+    later(() => layer.classList.remove("lc-landing"), Math.max(0, spans - 1) * per() + LAND + 100);
   }
 
   function schedule() {
@@ -159,12 +173,18 @@
   document.addEventListener("visibilitychange", schedule);
 
   // Lines break elsewhere at another width, and fonts can arrive late: site.js
-  // fits the rows again on the next frame; the order follows after it.
+  // fits the rows again on the next frame; the order follows after it. A
+  // resize of the height alone (a phone's address bar) breaks no line.
   let again = 0;
+  let orderedWidth = window.innerWidth;
   const reorder = () => {
     cancelAnimationFrame(again);
     again = requestAnimationFrame(() => requestAnimationFrame(orderAll));
   };
-  window.addEventListener("resize", reorder);
+  window.addEventListener("resize", () => {
+    if (window.innerWidth === orderedWidth) return;
+    orderedWidth = window.innerWidth;
+    reorder();
+  });
   document.fonts?.ready.then(reorder);
 })();

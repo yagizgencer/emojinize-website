@@ -317,10 +317,19 @@
   window.Emojinize = Object.freeze({ esc, annotate, land, render, installed, glue, fit });
 
   // Lines break elsewhere at another width, and an emoji font can arrive late.
+  // Only the width moves a line break: a phone's address bar showing or
+  // hiding as the reader scrolls resizes the height alone, and refitting then
+  // (.refit takes the transitions off) showed every emoji still landing at once.
   let refit = 0;
+  let fittedWidth = innerWidth;
   const fitAll = () => {
     cancelAnimationFrame(refit);
     refit = requestAnimationFrame(() => fit(document.body));
+  };
+  const onResize = () => {
+    if (innerWidth === fittedWidth) return;
+    fittedWidth = innerWidth;
+    fitAll();
   };
 
   function start() {
@@ -328,7 +337,7 @@
     applyInstalled();
     render(document);
     land(document.body);
-    addEventListener("resize", fitAll);
+    addEventListener("resize", onResize);
     document.fonts?.ready.then(fitAll);
     // The extension's mark can come after this script on a slow start.
     new MutationObserver(applyInstalled).observe(root, {
