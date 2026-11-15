@@ -43,6 +43,19 @@
        Only the tour's own controls are marked data-emojinize="ui": the
        extension emojinizes the sample story inside #step, as the tour asks. -->
   <main class="pg pg-tour">
+    <!-- Each step's three title emoji, by step. The one copy: assets/tour.js
+         reads it, and so does the extension's welcome.js when it runs the tour. -->
+    <script type="application/json" id="tour-deco">
+      {
+        "welcome": ["👋", "😊", "🎬"],
+        "pin": ["📌", "🧩", "⭐"],
+        "page": ["📄", "➡️", "😀"],
+        "select": ["🍰", "🖍️", "💫"],
+        "write": ["✍️", "🪄", "🌈"],
+        "display": ["⚙️", "🎚️", "👌"],
+        "finish": ["🏁", "🎉", "🚀"]
+      }
+    </script>
     <div class="banner" data-when="new" data-emojinize="ui">
       <span class="e" aria-hidden="true">🧩</span>
       <div><b>The tour runs with the extension.</b> Add Emojinize to Chrome and this tour opens by itself, driven by the real menu, right click and shortcuts.</div>

@@ -30,7 +30,12 @@
 
   const LOGO = `<img src="/assets/icons/mark40.png" srcset="/assets/icons/mark60.png 2x" width="19" height="16" alt="Emojinize">`;
   const ctl = (s) => `<span class="ctl">${s}</span>`;
-  const deco = (a) => `<div class="deco" aria-hidden="true">${a.map((x) => `<span>${x}</span>`).join("")}</div>`;
+  // Each step's title emoji, from the page (#tour-deco), which the extension's
+  // tour reads too: one copy for both.
+  const DECO = (() => {
+    try { return JSON.parse(document.getElementById("tour-deco").textContent); } catch { return {}; }
+  })();
+  const deco = (id) => `<div class="deco" aria-hidden="true">${(DECO[id] || []).map((x) => `<span>${x}</span>`).join("")}</div>`;
   const sample = (tag, cls, key, start, mode = "ontop") =>
     `<${tag} class="an ${cls}" data-mode="${mode}" data-render="${key}" data-start="${start}"></${tag}>`;
   const story = () =>
@@ -41,7 +46,7 @@
 
   const STEPS = [
     {
-      deco: ["👋", "😊", "🎬"],
+      id: "welcome",
       title: () => "Meet Emojinize",
       body: () =>
         "Words and phrases you read come to life with emojis, on any website. " +
@@ -57,7 +62,7 @@
         `</div><p class="cap">You can change this anytime.</p></div>`,
     },
     {
-      deco: ["📌", "🧩", "⭐"],
+      id: "pin",
       title: () => "Keep it within reach",
       body: () => "Pin Emojinize to your toolbar so it is always one click away.",
       extra: () =>
@@ -65,7 +70,7 @@
         `<li>Click the pin 📌 next to ${LOGO} Emojinize.</li></ol>`,
     },
     {
-      deco: ["📄", "➡️", "😀"],
+      id: "page",
       title: () => (auto === "on" ? "Every page, as it opens" : "A whole page in one click"),
       body: () =>
         auto === "on"
@@ -74,7 +79,7 @@
       extra: story,
     },
     {
-      deco: ["🍰", "🖍️", "💫"],
+      id: "select",
       title: () => "Or just the part you want",
       body: () =>
         `Select a few words, then click the icon that pops up next to them, or right click your selection and choose ${ctl("Emojinize")}.`,
@@ -84,7 +89,7 @@
         `<mark class="sel">${E.annotate([S.p2[0]])}</mark> ${E.esc(S.p2[1][0])}</p></div>`,
     },
     {
-      deco: ["✍️", "🪄", "🌈"],
+      id: "write",
       title: () => "Write your own",
       body: () => "Have a message or a post of your own? Emojinize it in the writer, then copy it with its emojis.",
       extra: () =>
@@ -93,7 +98,7 @@
         `<li>Type or paste anything, press ${ctl("Emojinize")}, and copy the result.</li></ol>`,
     },
     {
-      deco: ["⚙️", "🎚️", "👌"],
+      id: "display",
       title: () => "Make it yours",
       body: () =>
         `Open Emojinize and click ${ctl("Display settings")}. Try a bigger emoji size, or switch ${ctl("Emoji display")} to ${ctl("Toggle")}. ` +
@@ -106,7 +111,7 @@
         `${sample("p", "", "p3", 0)}</div>`,
     },
     {
-      deco: ["🏁", "🎉", "🚀"],
+      id: "finish",
       title: () => "You're all set",
       body: () => "Four shortcuts for when your hands are on the keyboard.",
       extra: () =>
@@ -140,7 +145,7 @@
     current = Math.max(0, Math.min(STEPS.length - 1, index));
     const step = STEPS[current];
     stepEl.innerHTML =
-      `<div class="step-c">${deco(step.deco)}<h1 class="disp sm" tabindex="-1">${step.title()}</h1>` +
+      `<div class="step-c">${deco(step.id)}<h1 class="disp sm" tabindex="-1">${step.title()}</h1>` +
       `<p class="lede">${step.body()}</p>${step.extra()}</div>`;
     stepEl.querySelectorAll("[data-render]").forEach((el) => {
       const s = S[el.dataset.render];
