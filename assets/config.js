@@ -16,6 +16,8 @@
  *                      Empty shows a link to the Tally form instead.
  *   TURNSTILE_SITE_KEY Cloudflare Turnstile on the feedback form, with
  *                      TURNSTILE_SECRET set on the Worker. Empty: off.
+ *   STATS_ENDPOINT     the telemetry Worker's website route (stats.js). Empty:
+ *                      nothing is counted.
  */
 (() => {
   const local = ["localhost", "127.0.0.1"].includes(location.hostname);
@@ -41,5 +43,11 @@
     TURNSTILE_SITE_KEY: local ? "" : "0x4AAAAAAFx7TQXxHBHiRvrL",
     // For 0.9 installs, which still open it directly.
     TALLY_FORM: "https://tally.so/r/44gJXB",
+
+    // Anonymous page counts (stats.js): a first-party name in prod, so
+    // blocking lists that match analytics hosts leave it alone.
+    STATS_ENDPOINT: local
+      ? "https://emojinize-telemetry.emojinize.workers.dev/v1/s"
+      : "https://e.emojinize.com/v1/s",
   });
 })();

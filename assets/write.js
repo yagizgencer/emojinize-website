@@ -174,6 +174,7 @@
     }
     if (length() > MAX) {
       say(SAY.tooLong, true);
+      window.EmojinizeStats?.writer({ outcome: "too_long", chars: length(), spans: 0, filled: 0, ttfeMs: null });
       return;
     }
     if (!live) {
@@ -188,6 +189,12 @@
     controller = new AbortController();
     const timer = setTimeout(() => controller.abort("timeout"), 90_000);
     let spans = [];
+    // For the anonymous counts (stats.js): how it went, how long the text
+    // was, how many words got an emoji, and how soon the first one came.
+    const startedAt = performance.now();
+    let firstEmojiAt = null;
+    let outcome = "ok";
+    let counted = { spans: 0, filled: 0 };
     try {
       spans = await Api.emojinize(text, {
         base: config.API_BASE,
@@ -200,19 +207,28 @@
           card.dataset.state = "result";
           paint();
         },
-        onEmoji: fill,
+        onEmoji(i, emoji) {
+          if (emoji && firstEmojiAt === null) firstEmojiAt = performance.now();
+          fill(i, emoji);
+        },
       });
+      counted = { spans: spans.length, filled: spans.filter((s) => s.emoji).length };
       // The last emojis may still be landing: words are put back once they have.
       await lander?.finish();
       // Edit text pressed while they landed.
       if (controller.signal.aborted) return;
       settle(spans);
       if (!spans.some((s) => s.emoji)) {
+        outcome = "nothing";
         card.dataset.state = "edit";
         say(SAY.nothing);
       }
     } catch (error) {
       const code = error && error.code;
+      outcome = code || "failed";
+      if (error && error.spans) {
+        counted = { spans: error.spans.length, filled: error.spans.filter((s) => s.emoji).length };
+      }
       if (code === "cancelled") return;
       if (error && error.spans && error.spans.some((s) => s.emoji)) {
         await lander?.finish();
@@ -224,6 +240,13 @@
       }
     } finally {
       clearTimeout(timer);
+      window.EmojinizeStats?.writer({
+        outcome,
+        chars: text.length,
+        spans: counted.spans,
+        filled: counted.filled,
+        ttfeMs: firstEmojiAt === null ? null : firstEmojiAt - startedAt,
+      });
       controller = null;
       busy = false;
       paint();
@@ -261,6 +284,7 @@
     button.addEventListener("click", async () => {
       if (!shown) return;
       if (!(await copyText(Api.serialize(shown.text, shown.spans, style)))) return;
+      window.EmojinizeStats?.copy(style);
       words.textContent = SAY.copied;
       clearTimeout(timer);
       timer = setTimeout(() => (words.textContent = label), 1600);

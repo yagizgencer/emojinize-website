@@ -1,8 +1,8 @@
 # emojinize.com
 
 The website of [Emojinize](https://github.com/emojinize-app/emojinize-web-extension).
-Static files on GitHub Pages (`CNAME`), no build step, no framework, no
-cookies and no analytics.
+Static files on GitHub Pages (`CNAME`), no build step, no framework and no
+cookies. Anonymous counts only (`assets/stats.js`, below).
 
 | Page | File | What it is |
 |---|---|---|

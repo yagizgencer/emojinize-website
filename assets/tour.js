@@ -144,6 +144,7 @@
     clearTimeout(picking);
     current = Math.max(0, Math.min(STEPS.length - 1, index));
     const step = STEPS[current];
+    window.EmojinizeStats?.tourStep(step.id);
     stepEl.innerHTML =
       `<div class="step-c">${deco(step.id)}<h1 class="disp sm" tabindex="-1">${step.title()}</h1>` +
       `<p class="lede">${step.body()}</p>${step.extra()}</div>`;

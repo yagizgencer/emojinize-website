@@ -446,13 +446,37 @@
     });
   }
 
+  // The ad tags a visit arrived with (utm_source, utm_medium, utm_campaign:
+  // the three the Chrome Web Store forwards to its Google Analytics, where an
+  // install is counted per campaign). Plain words only.
+  const UTM = ["utm_source", "utm_medium", "utm_campaign"];
+  const arrivedWith = UTM
+    .map((key) => [key, params.get(key)])
+    .filter(([, value]) => value && /^[\w.-]{1,64}$/.test(value));
+
+  /**
+   * Store links say where they were clicked, or pass on the visit's ad tags,
+   * so an install is counted under the campaign that brought it. Links to the
+   * site's other pages carry the tags along (nothing is stored in the
+   * browser), so a visit that lands on Home and installs from Write keeps them.
+   */
   function storeLinks() {
     const { STORE_URL } = window.EmojinizeConfig;
     document.querySelectorAll("a[data-store]").forEach((a) => {
       const url = new URL(STORE_URL);
-      url.searchParams.set("utm_source", "emojinize.com");
-      url.searchParams.set("utm_medium", a.dataset.store || "site");
+      if (arrivedWith.length) {
+        for (const [key, value] of arrivedWith) url.searchParams.set(key, value);
+      } else {
+        url.searchParams.set("utm_source", "emojinize.com");
+        url.searchParams.set("utm_medium", a.dataset.store || "site");
+      }
       a.href = url.href;
+    });
+    if (!arrivedWith.length) return;
+    document.querySelectorAll('a[href^="/"]').forEach((a) => {
+      const url = new URL(a.getAttribute("href"), location.origin);
+      for (const [key, value] of arrivedWith) url.searchParams.set(key, value);
+      a.setAttribute("href", url.pathname + url.search + url.hash);
     });
   }
 

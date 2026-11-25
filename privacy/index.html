@@ -22,6 +22,7 @@
   <script>document.documentElement.classList.add("js");</script>
   <script src="/assets/config.js" defer></script>
   <script src="/assets/site.js" defer></script>
+  <script src="/assets/stats.js" defer></script>
 </head>
 <body>
   <header class="snav" data-emojinize="ui">
@@ -60,8 +61,13 @@
         <ul>
           <li>which feature you used, and whether it worked</li>
           <li>the language, how many words got an emoji, and how quickly, as rough ranges</li>
-          <li>whether it is your first use that day, week or month, so we can count users without an ID</li>
-          <li>the extension version, browser and display mode</li>
+          <li>whether it is your first use that day, week or month, and how many weeks ago you installed Emojinize, so we can count users and see whether people come back without an ID</li>
+          <li>the extension version, browser, display mode, and whether Automatic is on</li>
+          <li>that it was installed, and on the page that opens if you remove it, roughly how long you had it and how much you used it</li>
+          <li>which settings you change, when you turn Emojinize off or back on for a site (never which site), and when you undo it on a page</li>
+          <li>how far you get in the welcome tour, and when you copy a result</li>
+          <li>how often Automatic starts on a page or skips it, and why, as counts</li>
+          <li>how often Emojinize shows that it is starting up or can't connect, as counts</li>
           <li>the most shown emoji in each language</li>
           <li>how often the feedback form is offered, opened or put off</li>
           <li>how often an earlier result could be reused instead of asking our server again, as counts</li>
@@ -72,8 +78,14 @@
 
       <section>
         <h2>On your device</h2>
-        <p>Your settings and a few counters, like when you last used Emojinize, stay in your browser. Uninstalling removes them.</p>
+        <p>Your settings and a few counters, like when you last used Emojinize and the week you installed it, stay in your browser. Uninstalling removes them.</p>
         <p>Recent results are kept in your browser's memory, so the same words are not sent twice. Short text you meet often, like a site's menus and buttons, is also kept on disk so this lasts between sessions. Both are stored as fingerprints and emoji, never as your text. The memory copy is gone when you close the browser. The disk copy is replaced as it fills up and removed when you uninstall. Nothing from private windows is kept on disk.</p>
+      </section>
+
+      <section>
+        <h2>On this website</h2>
+        <p>Each page you open here sends a short anonymous note, built only from fixed categories: the page, the kind of site you came from (like a search engine) or the campaign named in the link, your device type, browser, language and country, and whether the extension is installed. We also count clicks on the Chrome Web Store link, uses of the writer, and which sample language you pick.</p>
+        <p>No cookies, nothing stored in your browser, no address you came from and no ID. Text you type into the writer is handled like the extension's: used to pick emoji, never stored.</p>
       </section>
 
       <section>
