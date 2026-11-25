@@ -57,6 +57,8 @@
   let busy = false;
   let shown = null; // { text, spans } of the result on screen
   let controller = null;
+  // Lands the result's emojis in the text's order as they stream (site.js).
+  let lander = null;
 
   const store = {
     get() {
@@ -100,6 +102,7 @@
 
   function showEdit() {
     if (controller) controller.abort("cancelled");
+    lander?.stop();
     card.dataset.state = "edit";
     say("");
     paint();
@@ -130,18 +133,23 @@
     frag.append(cps.slice(pos).join(""));
     result.replaceChildren(frag);
     window.Emojinize?.glue(result);
+    lander?.stop();
+    lander = window.Emojinize?.lander(result) ?? null;
   }
 
-  // Rows are sized once per frame, as emojis arrive (site.js fit).
+  // Rows are sized once per frame (site.js fit).
   let fitting = 0;
   function refit() {
     cancelAnimationFrame(fitting);
     fitting = requestAnimationFrame(() => window.Emojinize?.fit(result));
   }
 
+  /** One answer, null for a word declined: it lands at its turn (site.js lander). */
   function fill(i, emoji) {
     const w = result.querySelector(`.w[data-index="${i}"]`);
     if (!w) return;
+    if (lander) return lander.arrive(w, emoji);
+    if (!emoji) return;
     w.querySelector(".g").textContent = emoji;
     refit();
     requestAnimationFrame(() => w.classList.add("got"));
@@ -175,6 +183,8 @@
     busy = true;
     say("");
     paint();
+    lander?.stop();
+    lander = null;
     controller = new AbortController();
     const timer = setTimeout(() => controller.abort("timeout"), 90_000);
     let spans = [];
@@ -192,6 +202,10 @@
         },
         onEmoji: fill,
       });
+      // The last emojis may still be landing: words are put back once they have.
+      await lander?.finish();
+      // Edit text pressed while they landed.
+      if (controller.signal.aborted) return;
       settle(spans);
       if (!spans.some((s) => s.emoji)) {
         card.dataset.state = "edit";
@@ -201,6 +215,7 @@
       const code = error && error.code;
       if (code === "cancelled") return;
       if (error && error.spans && error.spans.some((s) => s.emoji)) {
+        await lander?.finish();
         settle(error.spans);
         say(SAY.failed, true);
       } else {

@@ -61,7 +61,7 @@
    * Emojinizes one text. Resolves to its spans, [{start, end, emoji}] in
    * order, with emoji null for a word the model declined. `onSpans` hears the
    * spans as soon as they are known (before any emoji), and `onEmoji(index,
-   * emoji)` each emoji as it streams in.
+   * emoji)` each emoji as it streams in, with null for a word declined.
    */
   async function emojinize(text, options) {
     const marked = await post(options, "/v1/mark", { texts: [text], decoder: "qwen3" }, "application/json");
@@ -117,6 +117,9 @@
           if (typeof event.emoji === "string" && event.emoji) {
             spans[i].emoji = event.emoji;
             if (options.onEmoji) options.onEmoji(i, event.emoji);
+          } else if (spans[i].emoji === null && options.onEmoji) {
+            // Declined: said too, so the words after it need not wait for it.
+            options.onEmoji(i, null);
           }
         }
       }

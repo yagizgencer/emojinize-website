@@ -109,10 +109,10 @@
   }
 
   /**
-   * The site's own samples ([data-room] around them; not the writer): each
-   * phrase's box is padded to the width of its emojis plus a little air, so
-   * every row sits centred over its words at full size, and Toggle draws it
-   * at full size within the box. The padding follows On top's size in both
+   * The site's own text ([data-room] around it: the samples and the writer):
+   * each phrase's box is padded to the width of its emojis plus a little air,
+   * so every row sits centred over its words at full size, and Toggle draws
+   * it at full size within the box. The padding follows On top's size in both
    * modes, so switching modes moves no word.
    */
   function pad(el) {
@@ -121,19 +121,24 @@
       words.forEach((w) => w.style.removeProperty("padding-inline"));
       return;
     }
-    const emoji = parseFloat(getComputedStyle(el).getPropertyValue("--glyph-size")) || 0.78;
-    for (const w of words) {
-      const g = w.querySelector(".g");
-      if (!g?.textContent) {
-        w.style.removeProperty("padding-inline");
-        continue;
-      }
-      const size = parseFloat(getComputedStyle(w).fontSize) * emoji;
-      const row = (g.offsetWidth / parseFloat(getComputedStyle(g).fontSize)) * size;
-      const text = w.querySelector(".t").getBoundingClientRect().width;
-      const side = Math.max(0, (row + 0.3 * size - text) / 2);
-      w.style.setProperty("padding-inline", `${side.toFixed(1)}px`);
+    const emoji = glyphSize(el);
+    for (const w of words) padWord(w, emoji);
+  }
+
+  const glyphSize = (el) => parseFloat(getComputedStyle(el).getPropertyValue("--glyph-size")) || 0.78;
+
+  /** One phrase's box padded to its row (pad), or unpadded while it has none. */
+  function padWord(w, emoji) {
+    const g = w.querySelector(".g");
+    if (!g?.textContent) {
+      w.style.removeProperty("padding-inline");
+      return;
     }
+    const size = parseFloat(getComputedStyle(w).fontSize) * emoji;
+    const row = (g.offsetWidth / parseFloat(getComputedStyle(g).fontSize)) * size;
+    const text = w.querySelector(".t").getBoundingClientRect().width;
+    const side = Math.max(0, (row + 0.3 * size - text) / 2);
+    w.style.setProperty("padding-inline", `${side.toFixed(1)}px`);
   }
 
   function sizeRows(el) {
@@ -289,6 +294,133 @@
     requestAnimationFrame(() => requestAnimationFrame(() => els.forEach((el) => el.classList.add("on"))));
   }
 
+  /*
+   * Emojis that stream in (the writer) land as Home's do: in the text's
+   * order, LAND_PER_MS after the one before, each fading in and springing up
+   * with its tint. A word lands once its emoji is in and every word before it
+   * has landed or been declined; one still waiting holds the words after it
+   * that are in for at most HEAD_WAIT_MS, then they go past it and it lands
+   * when it comes. An emoji is written only at its turn, and its box then
+   * grows to its row (padWord) while the words after it slide along
+   * (site.css .w.landing), so no room opens before its emoji shows. The
+   * extension's content.js landStream lands its writer and card the same way,
+   * with the same numbers.
+   */
+  const LAND_PER_MS = 70;
+  const HEAD_WAIT_MS = 400;
+  const LAND_MS = 500;
+
+  /**
+   * A lander for the phrases (.w) under `el`, in text order, each with an
+   * empty .g. arrive(w, emoji) hands one its answer (null: declined, it stays
+   * plain); finish() says no more will come and resolves once the last has
+   * landed; stop() drops the rest.
+   */
+  function lander(el) {
+    // Its words land one by one, not all at once: start() lands every .an in
+    // the page, the writer's empty box included, and with .on there every
+    // word showed its tint before its emoji, and each emoji came in unanimated.
+    el.classList.remove("on");
+    const queue = [...el.querySelectorAll(".w")];
+    const answers = new Map();
+    // Words that held the queue too long: each lands when its emoji comes.
+    const late = new Set();
+    const timers = new Set();
+    const per = reducedMotion() ? 0 : LAND_PER_MS;
+    const emoji = glyphSize(el);
+    let free = 0;
+    let blockedSince = 0;
+    let blockTimer = 0;
+    let stopped = false;
+    let finished = null;
+    let resolveFinished = null;
+
+    const later = (fn, ms) => {
+      const t = setTimeout(() => {
+        timers.delete(t);
+        fn();
+      }, ms);
+      timers.add(t);
+    };
+
+    function landWord(w, value) {
+      if (stopped || !w.isConnected) return;
+      w.querySelector(".g").textContent = value;
+      w.classList.add("landing");
+      if (el.closest("[data-room]")) padWord(w, emoji);
+      w.classList.add("got");
+      later(() => w.classList.remove("landing"), LAND_MS + 100);
+    }
+
+    function slot(w, value) {
+      if (!value) return;
+      const now = performance.now();
+      const at = Math.max(now, free);
+      free = at + per;
+      if (at - now < 1) landWord(w, value);
+      else later(() => landWord(w, value), at - now);
+    }
+
+    function pump() {
+      clearTimeout(blockTimer);
+      if (stopped) return;
+      while (queue.length) {
+        const w = queue[0];
+        if (answers.has(w)) {
+          queue.shift();
+          blockedSince = 0;
+          slot(w, answers.get(w));
+          continue;
+        }
+        // The first word still waiting holds the ones after it that are in.
+        const ready = queue.findIndex((x) => answers.has(x));
+        if (ready < 0) {
+          blockedSince = 0;
+          return;
+        }
+        const now = performance.now();
+        blockedSince ||= now;
+        const left = blockedSince + HEAD_WAIT_MS - now;
+        if (left > 0) {
+          blockTimer = setTimeout(pump, left);
+          return;
+        }
+        for (const x of queue.splice(0, ready)) late.add(x);
+        blockedSince = 0;
+      }
+    }
+
+    function stop() {
+      stopped = true;
+      clearTimeout(blockTimer);
+      for (const t of timers) clearTimeout(t);
+      timers.clear();
+      resolveFinished?.();
+    }
+
+    return {
+      arrive(w, value) {
+        if (stopped || !w || answers.has(w)) return;
+        answers.set(w, value || null);
+        if (late.delete(w)) slot(w, value);
+        else pump();
+      },
+      finish() {
+        if (finished) return finished;
+        for (const w of [...queue, ...late]) if (!answers.has(w)) answers.set(w, null);
+        late.clear();
+        pump();
+        finished = new Promise((resolve) => {
+          resolveFinished = resolve;
+          later(resolve, Math.max(0, free - performance.now()) + LAND_MS);
+        });
+        if (stopped) resolveFinished();
+        return finished;
+      },
+      stop,
+    };
+  }
+
   /**
    * Fills every [data-render] under `scope` from samples.js, from the story
    * the nearest [data-story] names (Home: "lake"), or the tour's ("monday").
@@ -341,7 +473,7 @@
     if (word) word.classList.toggle("show");
   });
 
-  window.Emojinize = Object.freeze({ esc, annotate, land, render, installed, glue, fit, order });
+  window.Emojinize = Object.freeze({ esc, annotate, land, render, installed, glue, fit, order, lander });
 
   // Lines break elsewhere at another width, and an emoji font can arrive late.
   // Only the width moves a line break: a phone's address bar showing or

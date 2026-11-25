@@ -534,8 +534,15 @@ kbd {
    carousel language's emojis are landing (carousel.js .lc-landing): taking
    their transitions off cancels the ones still waiting, and every emoji not
    yet landed showed at once (a font arriving late on a first visit). */
-.an.refit:not(.lc-landing .an) .g {
+.an.refit:not(.lc-landing .an) .w:not(.landing) .g {
   transition: none !important;
+}
+
+/* A streamed emoji landing (site.js lander, the writer): its box grows to
+   its row as it lands, and the words after it slide along rather than jump.
+   A refit spares it (above), so it is never cut short. */
+.js .an .w.landing {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, padding-inline 0.3s ease;
 }
 
 /* --dx: how far site.js fit() slid the row off its words' centre.
