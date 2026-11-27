@@ -56,9 +56,12 @@ localhost, the dev ones (which accept `http://localhost:8000`).
 
 ## Where the extension takes over
 
-The extension's content scripts run on every site, this one included. Three
-attributes on `<html>`, set by a content script at `document_start` on
-emojinize.com, are the whole hand-off:
+The extension emojinizes nothing on this site (since 2026-11-27): its page
+scripts run on every other site but stay off this one, and on Home, Feedback,
+Privacy and the rest its popup says "Emojiception is forbidden: cannot
+emojinize the Emojinize :)." The writer and the tour are the exceptions: there
+the extension runs scripts of its own. Three attributes on `<html>`, set by a
+content script at `document_start` on emojinize.com, are the whole hand-off:
 
 - `data-emojinize-extension="<version>"`: the extension is installed. Pages
   then show what is marked `data-when="installed"` and hide `data-when="new"`
@@ -80,9 +83,10 @@ emojinize.com, are the whole hand-off:
   Only the tour's own controls are marked `data-emojinize="ui"` on that page:
   the extension emojinizes the sample story inside `#step`.
 
-Everything the extension should not annotate carries `data-emojinize="ui"`
-(the header, and every page's working parts): the page pass skips it, so
-Automatic mode never puts emojis on the site's own controls or samples.
+Everything the extension should not annotate also carries
+`data-emojinize="ui"` (the header, and every page's working parts). The page
+pass skips it. That matters on the tour, where the page pass runs; elsewhere it
+backs up the rule above for builds older than it.
 
 ## The privacy policy
 

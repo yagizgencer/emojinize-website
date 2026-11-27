@@ -1994,6 +1994,15 @@ html[data-emojinize-tour="host"] #step kbd {
   }
 }
 
+/* The five links fit side by side down to 320px (a small phone); narrower
+   still, the bar scrolls and site.js keeps the current page's link in view. */
+@media (max-width: 360px) {
+  .links a {
+    margin: 0 4px;
+    font-size: 14px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .deco span {
     animation: none;

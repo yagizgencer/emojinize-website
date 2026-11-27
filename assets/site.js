@@ -515,9 +515,24 @@
     fitAll();
   };
 
+  /**
+   * On a screen too narrow for every link, the site nav scrolls sideways:
+   * the current page's link is scrolled into view, so it never sits cut off.
+   */
+  function showCurrentLink() {
+    const nav = document.querySelector(".links");
+    const cur = nav?.querySelector('[aria-current="page"]');
+    if (!cur || nav.scrollWidth <= nav.clientWidth) return;
+    const n = nav.getBoundingClientRect();
+    const c = cur.getBoundingClientRect();
+    if (c.right > n.right) nav.scrollLeft += c.right - n.right + 8;
+    else if (c.left < n.left) nav.scrollLeft -= n.left - c.left + 8;
+  }
+
   function start() {
     storeLinks();
     applyInstalled();
+    showCurrentLink();
     render(document);
     land(document.body);
     addEventListener("resize", onResize);

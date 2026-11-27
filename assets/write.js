@@ -296,14 +296,19 @@
 
   // --- wiring -----------------------------------------------------------------
 
-  field.maxLength = MAX;
+  // No maxlength on the box: it would cut a longer paste off without a word
+  // (and it counts UTF-16 units, where the gateway counts characters). A text
+  // over MAX stays as pasted, the count turns red, and the message says why
+  // Emojinize won't take it.
   field.value = store.get();
   card.dataset.state = "edit";
   paint();
+  if (length() > MAX) say(SAY.tooLong, true);
 
   field.addEventListener("input", () => {
     store.set(field.value);
-    if (status.classList.contains("bad") || status.textContent === SAY.soon) say("");
+    if (length() > MAX) say(SAY.tooLong, true);
+    else if (status.classList.contains("bad") || status.textContent === SAY.soon) say("");
     paint();
   });
   go.addEventListener("click", () => {
